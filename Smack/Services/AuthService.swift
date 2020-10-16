@@ -8,7 +8,7 @@
 
 import Foundation
 import Alamofire
-
+import SwiftyJSON
 
 //http://localhost:3005/v1
 
@@ -57,6 +57,52 @@ class AuthService {
         
         Alamofire.request(URL_REGISTER, method: .post, parameters: body, encoding: JSONEncoding.default, headers: header).responseString { (response) in
             if response.result.error == nil {
+                completion(true)
+            } else {
+                completion(false)
+                debugPrint(response.result.error as Any)
+            }
+        }
+    }
+    
+    func loginUser(email : String , password : String, completion : @escaping CompletionHandler) {
+        
+        let lowerCasedEmail = email.lowercased()
+        let header = [
+            "Content-Type" : "application/json; charset=utf-8"
+        ]
+        
+        let body : [String : Any] = [
+            "email" : lowerCasedEmail,
+            "password" : password
+        ]
+        
+        Alamofire.request(URL_LOGIN, method: .post, parameters: body, encoding: JSONEncoding.default, headers: header).responseJSON { (response) in
+            if response.result.error == nil {
+                
+//                if let json = response.result.value as? Dictionary<String, Any> {
+//                    if let user = json["user"] as? String {
+//                        self.userEmail = user
+//                    }
+//                    if let token = json["token"] as? String {
+//                        self.authToken = token
+//                    }
+//                }
+                
+                guard let data = response.data else {
+                    return
+                }
+                
+                do {
+                    let json = try JSON(data: data)
+                    
+                    self.userEmail = json["user"].stringValue
+                    self.authToken = json["token"].stringValue
+                } catch let error {
+                    debugPrint(error.localizedDescription)
+                }
+                
+                self.isLoggedIn = true
                 completion(true)
             } else {
                 completion(false)

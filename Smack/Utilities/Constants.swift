@@ -16,7 +16,7 @@ typealias CompletionHandler = (_ success: Bool) -> ()
 let BASE_URL = "http://192.168.2.26:3005/v1/"
 
 let URL_REGISTER = "\(BASE_URL)account/register"
-
+let URL_LOGIN = "\(BASE_URL)account/login"
 
 
 //Segues
