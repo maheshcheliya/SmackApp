@@ -13,9 +13,10 @@ class CreateAccountVC: UIViewController {
     @IBOutlet weak var txtUserName: UITextField!
     @IBOutlet weak var txtEmail: UITextField!
     @IBOutlet weak var txtPassword: UITextField!
-    
     @IBOutlet weak var imgUser: UIImageView!
     
+    var avatarName = "profileDefault"
+    var avatarColor = "[0.5,0.5,0.5,1]"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,7 @@ class CreateAccountVC: UIViewController {
     @IBAction func closeBtnPressed(_ sender: Any) {
         performSegue(withIdentifier: UNWIND, sender: nil)
     }
+    
     @IBAction func pickAvatarPressed(_ sender: Any) {
         
     }
@@ -40,6 +42,11 @@ class CreateAccountVC: UIViewController {
     }
     
     @IBAction func createAccountPressed(_ sender: Any) {
+        
+        guard let name = txtUserName.text, txtUserName.text != "" else {
+            return
+        }
+        
         guard let email = txtEmail.text , txtEmail.text != "" else {
             return
         }
@@ -53,7 +60,16 @@ class CreateAccountVC: UIViewController {
                 print("Registered user")
                 AuthService.instance.loginUser(email: email, password: pass) { (success2) in
                     if success2 {
-                        print("logged in user: ", AuthService.instance.authToken)
+//                        print("logged in user: ", AuthService.instance.authToken)
+                        
+                        AuthService.instance.createUser(name: name, email: email, avatarName: self.avatarName, avatarColor: self.avatarColor) { (success) in
+                            if success {
+                                print(UserDataService.instance.name)
+                                print(UserDataService.instance.avatarName)
+                                
+                                self.performSegue(withIdentifier: UNWIND, sender: self)
+                            }
+                        }
                     }
                 }
             }
