@@ -23,6 +23,14 @@ class CreateAccountVC: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if UserDataService.instance.avatarName != "" {
+            avatarName = UserDataService.instance.avatarName
+            imgUser.image = UIImage(named: avatarName)
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         txtPassword.endEditing(true)
         txtEmail.endEditing(true)
