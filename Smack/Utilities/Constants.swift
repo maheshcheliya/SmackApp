@@ -17,7 +17,7 @@ let BASE_URL = "http://192.168.2.26:3005/v1/"
 let URL_REGISTER = "\(BASE_URL)account/register"
 let URL_LOGIN = "\(BASE_URL)account/login"
 let URL_USER_ADD = "\(BASE_URL)user/add"
-
+let URL_USER_BY_EMAIL = "\(BASE_URL)user/byemail/"
 //Colors
 let smackPurplePlaceHolder = #colorLiteral(red: 0.3254901961, green: 0.4196078431, blue: 0.7764705882, alpha: 0.5)
 
@@ -37,6 +37,19 @@ let UNWIND = "unwindToChannel"
 let TOKEN_KEY = "token"
 let LOGGED_IN_KEY = "loggedIn"
 let USER_EMAIL_KEY = "userEmail"
+
+
+
+//Headers
+let HEADER = [
+    "Content-Type" : "application/json; charset=utf-8"
+]
+
+
+let BEARER_HEADER : [String : String] = [
+    "Content-Type" : "application/json; charset=utf-8",
+    "Authorization" : "Bearer \(AuthService.instance.authToken)"
+]
 
 // mlab database config
 //username : mahesh
