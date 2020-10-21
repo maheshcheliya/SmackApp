@@ -38,14 +38,16 @@ class LoginVC: UIViewController {
         guard let password = txtPassword.text, password != "" else { return }
         
         AuthService.instance.loginUser(email: email, password: password) { (success) in
+            self.spinner.stopAnimating()
             if success {
                 AuthService.instance.findUserByEmail { (success) in
-                    self.spinner.stopAnimating()
                     if success {
                         NotificationCenter.default.post(name: NOTIFICATION_USER_DATA_DID_CHANGE, object: nil)
                         self.dismiss(animated: true, completion: nil)
                     }
                 }
+            } else {
+                print("email or password wrong")
             }
         }
     }

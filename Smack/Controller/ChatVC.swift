@@ -10,7 +10,8 @@ import UIKit
 
 class ChatVC: UIViewController {
 
-//    Outlets
+    @IBOutlet weak var channelNameLbl: UILabel!
+    //    Outlets
     @IBOutlet weak var menuBtn: UIButton!
     
     
@@ -22,22 +23,43 @@ class ChatVC: UIViewController {
         self.view.addGestureRecognizer((self.revealViewController()?.panGestureRecognizer())!)
         self.view.addGestureRecognizer((self.revealViewController()?.tapGestureRecognizer())!)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatVC.userDataDidChange(_:)), name: NOTIFICATION_USER_DATA_DID_CHANGE, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatVC.channelSelected(_:)), name: NOTIFICATION_CHANNEL_SELECTED, object: nil)
+        
+        
         if AuthService.instance.isLoggedIn {
             AuthService.instance.findUserByEmail { (success) in
                 NotificationCenter.default.post(name: NOTIFICATION_USER_DATA_DID_CHANGE, object: nil)
+                
+                
             }
         }
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func userDataDidChange(_ notif : Notification) {
+        if AuthService.instance.isLoggedIn {
+//            get channels
+            onLoginGetMessages()
+        } else {
+            channelNameLbl.text = "Please Log In"
+        }
     }
-    */
-
+    
+    @objc func channelSelected(_ notifi : Notification) {
+        updateWithChannel()
+    }
+    
+    func updateWithChannel() {
+        let channelName = MessageService.instance.selectedChannel?.channelTitle ?? "Please Log In"
+        
+        channelNameLbl.text = channelName
+    }
+    
+    func onLoginGetMessages() {
+        MessageService.instance.findAllChannel { (success) in
+            if success {
+//                Do stuff with channels
+            }
+        }
+    }
 }

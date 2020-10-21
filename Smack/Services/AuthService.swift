@@ -57,7 +57,7 @@ class AuthService {
                 completion(true)
             } else {
                 completion(false)
-                debugPrint(response.result.error as Any)
+                debugPrint("register user : \(response.result.error as Any)")
             }
         }
     }
@@ -65,7 +65,6 @@ class AuthService {
     func loginUser(email : String , password : String, completion : @escaping CompletionHandler) {
         
         let lowerCasedEmail = email.lowercased()
-        
         
         let body : [String : Any] = [
             "email" : lowerCasedEmail,
@@ -85,6 +84,7 @@ class AuthService {
 //                }
                 
                 guard let data = response.data else {
+                    completion(false)
                     return
                 }
                 
@@ -92,15 +92,20 @@ class AuthService {
                     let json = try JSON(data: data)
                     self.userEmail = json["user"].stringValue
                     self.authToken = json["token"].stringValue
+                    
+                    if self.authToken != "" && self.userEmail != "" {
+                        self.isLoggedIn = true
+                        completion(true)
+                    } else {
+                        completion(false)
+                    }
                 } catch let error {
-                    debugPrint(error.localizedDescription)
+                    completion(false)
+                    debugPrint("login 1:\(error.localizedDescription)")
                 }
-                
-                self.isLoggedIn = true
-                completion(true)
             } else {
                 completion(false)
-                debugPrint(response.result.error as Any)
+                debugPrint("login 2 : \(response.result.error as Any)")
             }
         }
     }
@@ -124,7 +129,7 @@ class AuthService {
                 completion(true)
             } else {
                 completion(false)
-                debugPrint(response.result.error as Any)
+                debugPrint("create user 1 :\(response.result.error as Any)")
             }
         }
     }
@@ -137,7 +142,7 @@ class AuthService {
                 completion(true)
             } else {
                 completion(false)
-                debugPrint(response.result.error as Any)
+                debugPrint("find user by email : \(response.result.error as Any)")
             }
         }
     }
@@ -154,7 +159,7 @@ class AuthService {
             
             UserDataService.instance.setUserData(id: id, color: color, avatarName: avatarName, email: email, name: name)
         } catch let error {
-            debugPrint(error.localizedDescription)
+            debugPrint("set user info :\(error.localizedDescription)")
         }
     }
 }

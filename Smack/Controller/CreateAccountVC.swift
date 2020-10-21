@@ -52,11 +52,6 @@ class CreateAccountVC: UIViewController {
     @objc func handleTap() {
         view.endEditing(true)
     }
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        txtPassword.endEditing(true)
-//        txtEmail.endEditing(true)
-//        txtUserName.endEditing(true)
-//    }
     
     @IBAction func closeBtnPressed(_ sender: Any) {
         performSegue(withIdentifier: UNWIND, sender: nil)
