@@ -80,8 +80,9 @@ class ChatVC: UIViewController {
             }
         }
         
-        SocketService.instance.getChatMessage { (success) in
-            if success {
+        SocketService.instance.getChatMessage { (newMessage) in
+            if newMessage.channelId == MessageService.instance.selectedChannel?.id &&  AuthService.instance.isLoggedIn {
+                MessageService.instance.messages.append(newMessage)
                 self.tblView.reloadData()
                 if MessageService.instance.messages.count > 0 {
                     let index = IndexPath(row: MessageService.instance.messages.count - 1, section: 0)
@@ -89,6 +90,16 @@ class ChatVC: UIViewController {
                 }
             }
         }
+        
+//        SocketService.instance.getChatMessage { (success) in
+//            if success {
+//                self.tblView.reloadData()
+//                if MessageService.instance.messages.count > 0 {
+//                    let index = IndexPath(row: MessageService.instance.messages.count - 1, section: 0)
+//                    self.tblView.scrollToRow(at: index, at: .bottom, animated: true)
+//                }
+//            }
+//        }
     }
     
     @IBAction func messageBoxEditing(_ sender: Any) {
