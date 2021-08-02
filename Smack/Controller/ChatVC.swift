@@ -173,10 +173,14 @@ class ChatVC: UIViewController {
             guard let message = messageTxtBox.text else { return }
             
             SocketService.instance.addMessage(messageBody: message, userId: UserDataService.instance.id, channelId: channelId) { (success) in
+                DispatchQueue.main.async {
+                    
+            
                 if success {
                     self.messageTxtBox.text = ""
                     self.messageTxtBox.resignFirstResponder()
                     SocketService.instance.socket.emit("stopType", UserDataService.instance.name, channelId)
+                }
                 }
             }
         }
@@ -206,9 +210,13 @@ class ChatVC: UIViewController {
         guard let channelId = MessageService.instance.selectedChannel?.id else { return }
         MessageService.instance.findAllMessagesForChannel(channelId: channelId) { (success) in
             if success {
-                self.tblView.reloadData()
-                let index = IndexPath(row: MessageService.instance.messages.count - 1, section: 0)
-                self.tblView.scrollToRow(at: index, at: .bottom, animated: true)
+                DispatchQueue.main.async {
+                    self.tblView.reloadData()
+                    if(MessageService.instance.messages.count > 1) {
+                        let index = IndexPath(row: MessageService.instance.messages.count - 1, section: 0)
+                        self.tblView.scrollToRow(at: index, at: .bottom, animated: true)
+                    }
+                }
             }
         }
     }

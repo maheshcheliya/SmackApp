@@ -86,7 +86,9 @@ class ChannelVC: UIViewController {
     }
 }
 extension ChannelVC : UITableViewDelegate , UITableViewDataSource {
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -107,6 +109,7 @@ extension ChannelVC : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let channel = MessageService.instance.channels[indexPath.row]
+        print(channel.channelTitle)
         MessageService.instance.selectedChannel = channel
         
         if MessageService.instance.unreadChannels.count > 0 {
@@ -116,7 +119,7 @@ extension ChannelVC : UITableViewDelegate , UITableViewDataSource {
         let index = IndexPath(row: indexPath.row, section: 0)
         tableView.reloadRows(at: [index], with: .none)
         tableView.selectRow(at: index, animated: false, scrollPosition: .none)
-        
+
         NotificationCenter.default.post(name: NOTIFICATION_CHANNEL_SELECTED, object: nil)
         self.revealViewController()?.revealToggle(animated: true)
     }

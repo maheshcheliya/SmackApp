@@ -29,6 +29,7 @@ class MessageService {
 //                    print(channels)
                     
                     if let json = try JSON(data: data).array {
+                        self.channels.removeAll()
                         for item in json {
                             let name = item["name"].stringValue
                             let channelDescription = item["description"].stringValue
@@ -68,6 +69,7 @@ class MessageService {
                 guard let data = response.data else { return }
                 do {
                     if let json = try JSON(data: data).array {
+                        self.messages.removeAll()
                         for item in json {
                             let messageBody = item["messageBody"].stringValue
                             let channelId = item["channelId"].stringValue
